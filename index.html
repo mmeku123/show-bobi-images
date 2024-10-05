@@ -15,7 +15,7 @@
         Image Gallery (512x512)
       </h1>
       <div
-        class="gallery grid lg:grid-cols-9 md:grid-cols-6 sm:grid-cols-3 gap-2 p-4 bg-light-300"
+        class="gallery grid lg:grid-cols-8 md:grid-cols-4 sm:grid-cols-4 gap-2 p-4 bg-light-300"
         id="gallery"
       ></div>
     </div>
@@ -50,11 +50,13 @@
         gallery.appendChild(imageContainer);
       }
 
-      for (let index = 1; index <= 70; index++) {
-        const imageIdle = `GIF-${index}-idle_${index}.gif`;
-        const imageWalk = `GIF-${index}-walk_${index}.gif`;
-        const imageRush = `GIF-${index}-walk_r_${index}.gif`;
+      for (let index = 1; index <= 100; index++) {
+        const imageNormal = `${index}.png`;
+        const imageIdle = `${index}.gif`;
+        const imageWalk = `${index}_walk.gif`;
+        const imageRush = `${index}_rush.gif`;
 
+        addImage(imageNormal, `${index}`);
         addImage(imageIdle, `${index} Idle`);
         addImage(imageWalk, `${index} Walk`);
         addImage(imageRush, `${index} Rush`);
