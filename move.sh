@@ -19,3 +19,9 @@ for n in {1..100}; do
         mv "GIF-${n}-walk_r_${n}.gif" "${n}_rush.gif"
     fi
 done
+
+for file in *.PNG; do
+    if [ -f "$file" ]; then
+        mv "$file" "${file%.PNG}.png"
+    fi
+done
