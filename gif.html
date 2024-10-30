@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Image Gallery</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      /* Custom styles if needed */
+    </style>
+  </head>
+  <body class="bg-gray-100">
+    <div class="container mx-auto">
+      <h1 class="text-3xl font-bold text-center my-6">
+        Image Gallery (512x512)
+      </h1>
+      <div
+        class="gallery grid lg:grid-cols-8 md:grid-cols-4 sm:grid-cols-4 gap-2 p-4 bg-light-300"
+        id="gallery"
+      ></div>
+    </div>
+
+    <script>
+      // Get the gallery element
+      const gallery = document.getElementById("gallery");
+
+      // Loop through image URLs and create image elements
+
+      function addImage(image, name) {
+        const imageContainer = document.createElement("div");
+        imageContainer.className =
+          "border-2 border-gray-400 p-4 rounded-lg shadow-md";
+
+        // Create the image element
+        const img = document.createElement("img");
+        img.src = `./assets/${image}`;
+        img.alt = image;
+        img.className = "w-128 h-128 object-cover mb-2"; // Tailwind classes for the image
+
+        // Create a text element for the image name
+        const imgName = document.createElement("p");
+        imgName.textContent = name;
+        imgName.className = "text-center text-lg font-semibold text-gray-700"; // Tailwind classes for the name
+
+        // Append the image and name to the container
+        imageContainer.appendChild(img);
+        imageContainer.appendChild(imgName);
+
+        // Append the container to the gallery
+        gallery.appendChild(imageContainer);
+      }
+
+      for (let index = 1; index <= 100; index++) {
+        const imageNormal = `/png/normal/${index}.png`;
+        const imageIdle = `/gif/${index}.gif`;
+        const imageWalk = `/gif/${index}_walk.gif`;
+        const imageRush = `/gif/${index}_rush.gif`;
+
+        addImage(imageNormal, `${index}`);
+        addImage(imageIdle, `${index} Idle`);
+        addImage(imageWalk, `${index} Walk`);
+        addImage(imageRush, `${index} Rush`);
+      }
+    </script>
+  </body>
+</html>

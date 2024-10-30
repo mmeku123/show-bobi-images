@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Image Gallery</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     <style>
       /* Custom styles if needed */
     </style>
@@ -14,6 +16,23 @@
       <h1 class="text-3xl font-bold text-center my-6">
         Image Gallery (512x512)
       </h1>
+      <div class="text-center mb-4">
+        <a
+          id="gif"
+          href="gif.html"
+          class="bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg"
+        >
+          GIF Images
+        </a>
+      </div>
+      <div class="text-center mb-4">
+        <button
+          id="download-all"
+          class="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg"
+        >
+          Download All
+        </button>
+      </div>
       <div
         class="gallery grid lg:grid-cols-8 md:grid-cols-4 sm:grid-cols-4 gap-2 p-4 bg-light-300"
         id="gallery"
@@ -21,46 +40,68 @@
     </div>
 
     <script>
-      // Get the gallery element
       const gallery = document.getElementById("gallery");
 
-      // Loop through image URLs and create image elements
-
+      // Function to add each image along with download button
       function addImage(image, name) {
         const imageContainer = document.createElement("div");
         imageContainer.className =
           "border-2 border-gray-400 p-4 rounded-lg shadow-md";
 
-        // Create the image element
         const img = document.createElement("img");
         img.src = `./assets/${image}`;
         img.alt = image;
-        img.className = "w-128 h-128 object-cover mb-2"; // Tailwind classes for the image
+        img.className = "w-128 h-128 object-cover mb-2";
 
-        // Create a text element for the image name
         const imgName = document.createElement("p");
         imgName.textContent = name;
-        imgName.className = "text-center text-lg font-semibold text-gray-700"; // Tailwind classes for the name
+        imgName.className = "text-center text-lg font-semibold text-gray-700";
 
-        // Append the image and name to the container
+        const downloadButton = document.createElement("button");
+        downloadButton.textContent = "Download";
+        downloadButton.className =
+          "bg-green-500 text-white px-3 py-1 mt-2 rounded-lg";
+        downloadButton.onclick = () => {
+          const link = document.createElement("a");
+          link.href = img.src;
+          link.download = `${name}.png`;
+          link.click();
+        };
+
         imageContainer.appendChild(img);
         imageContainer.appendChild(imgName);
+        imageContainer.appendChild(downloadButton);
 
-        // Append the container to the gallery
         gallery.appendChild(imageContainer);
       }
 
+      // Loop to add images
       for (let index = 1; index <= 100; index++) {
         const imageNormal = `/png/normal/${index}.png`;
-        const imageIdle = `/gif/${index}.gif`;
-        const imageWalk = `/gif/${index}_walk.gif`;
-        const imageRush = `/gif/${index}_rush.gif`;
-
         addImage(imageNormal, `${index}`);
-        addImage(imageIdle, `${index} Idle`);
-        addImage(imageWalk, `${index} Walk`);
-        addImage(imageRush, `${index} Rush`);
       }
+
+      // Download all images in a zip file
+      document.getElementById("download-all").onclick = async () => {
+        const zip = new JSZip();
+        const folder = zip.folder("Image_Gallery");
+
+        for (let index = 1; index <= 100; index++) {
+          const imageNormal = `/assets/png/normal/${index}.png`;
+          try {
+            const response = await fetch(imageNormal);
+            if (!response.ok) throw new Error(`Failed to fetch ${imageNormal}`);
+            const blob = await response.blob();
+            folder.file(`${index}.png`, blob);
+          } catch (error) {
+            console.error(error);
+          }
+        }
+
+        zip.generateAsync({ type: "blob" }).then((content) => {
+          saveAs(content, "Image_Gallery.zip");
+        });
+      };
     </script>
   </body>
 </html>
